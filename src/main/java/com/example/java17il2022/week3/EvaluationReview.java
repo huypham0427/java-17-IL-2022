@@ -2,6 +2,9 @@ package com.example.java17il2022.week3;
 
 
 import java.util.*;
+import java.util.concurrent.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 interface A {
     int a = 5;
@@ -89,11 +92,195 @@ class IteratorExample {
  *  9. BlockingQueue
  *
  *  *****************************************
- *     CountDownLatch vs Semaphore vs CyclicBarrier
+ *     CountDownLatch vs CyclicBarrier
+ *
+ *          Thread1(countDown), Thread2(countDown), Thread3(countDown, countDown)
+ *                      |
+ *                   Thread4(await)
+ *
+ *     Semaphore
+ *
+ *     Task : CPU VS IO
  *  1. ThreadPool
+ *      Executors
+ *      a. ThreadPoolExecutor
+ *              [][][][][][][][][] blocking queue -> worker1
+ *                                                -> worker2
+ *      b. ForkJoinPool (Stealing algorithm)
+ *              [][][][][][][][][] blocking queue -> worker1 [sub1][sub2][][][][]
+ *                                               -> worker2 [sub3][][][][][]
+ *      c. ScheduledThreadPool
+ *
+ *      d. Thread pool size
+ *          CPU : core + 1
+ *          IO  : 80% IO waiting + 20% CPU time = 10s
+ *                8s IO waiting + 2s CPU
+ *                1 / 20% = 5
+ */
+class ThreadPoolInitialization {
+
+    private static final ExecutorService pool = Executors.newCachedThreadPool();
+
+    public static void execute(String msg) {
+        pool.submit(() -> System.out.println(msg));
+    }
+
+    public static void main(String[] args) {
+        for(int i = 0; i < 10; i++) {
+            execute("this is " + i);
+        }
+    }
+}
+/**
+ *  CompletableFuture vs Future
+ */
+class CompletableFutureTest1 {
+
+    private static final ExecutorService pool = Executors.newCachedThreadPool();
+
+
+    public static void main(String[] args) throws ExecutionException, InterruptedException {
+//        Future<Integer> future = pool.submit(() -> 1);
+//        int res = future.get();
+//        System.out.println(res);
+        CompletableFuture<Integer> cf1 = CompletableFuture.supplyAsync(() -> {
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return 1;
+        }, pool);
+        CompletableFuture<Integer> cf2 = CompletableFuture.supplyAsync(() -> 2, pool);
+        CompletableFuture<Integer> cf3 = CompletableFuture.supplyAsync(() -> 3, pool);
+        //solution1
+        List<Integer> list = Arrays.asList(cf1.join(), cf2.join(), cf3.join());
+        System.out.println(list);
+        //solution2
+        CompletableFuture[] completableFutures = {cf1, cf2, cf3};
+        CompletableFuture.allOf(completableFutures)
+                .thenApply(xx -> {
+                    List<Integer> res = new ArrayList<>();
+                    for(CompletableFuture<Integer> future: completableFutures) {
+                        res.add(future.join());
+                    }
+                    return res;
+                }).thenApply(arrList -> arrList.toString())
+                .thenAccept(str -> System.out.println(str))
+                .join();
+    }
+
+}
+
+/**
  *  2. StackOverFlow Error
  *  3. OutOfMemory Error
- *  4. JVM (tuning)
+ *      [][][][][][][
+ *      [][][o][][][]
+ *      1. increase young gen size
+ *      2. check memory leak
+ *          heap dump -> memory analyzer / Jprofiler / Java mission control
+ *          JConsole / real time GC monitors
+ *      3. StrongReference / SoftReference / WeakReference / PhantomReference + ReferenceQueue
+ *
+ *  4. java pass by value
+ */
+class JavaPassByValue {
+    private static void fun1() {
+        List<Integer> list1 = new ArrayList<>();
+        fun2(list1);
+        System.out.println(list1);
+    }
+    // list1 -> obj
+    // list2 ->null
+    private static void fun2(List<Integer> list2) {
+//        list2.add(5);
+        list2 = Arrays.asList(1, 2, 3);
+    }
+
+    public static void main(String[] args) {
+        fun1();
+    }
+}
+/**
+ *  5. java 8
+ *      employee {
+ *          String name;
+ *          int age;
+ *      }
+ *      List<Employees> emps;
+ *      a. group by employees based on age, return map<age, List<emp>>
+*/
+class Java8Test {
+    private static class Employee {
+        String name;
+        int age;
+
+        public Employee(String name, int age) {
+            this.name = name;
+            this.age = age;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public int getAge() {
+            return age;
+        }
+
+        @Override
+        public String toString() {
+            return "Employee{" +
+                    "name='" + name + '\'' +
+                    ", age=" + age +
+                    '}';
+        }
+    }
+
+    public static void main(String[] args) {
+        Employee e1 = new Employee("Tom", 1);
+        Employee e2 = new Employee("Alex", 1);
+        Employee e3 = new Employee("Jerry", 2);
+        List<Employee> emps = Arrays.asList(e1, e2, e3);
+        Map<Integer, List<Employee>> map = emps.stream().collect(
+                HashMap::new,
+                (m, employee) -> {
+                    m.putIfAbsent(employee.age, new ArrayList<>());
+                    m.get(employee.age).add(employee);
+                },
+                (m1, m2) -> {});
+        System.out.println(map);
+    }
+}
+/**
+ *  java 8 questions
+ *      1. intermediate operations vs terminal operations
+ *          a. return value
+ *          b. lazy loading
+ *                  list.stream().map().filter().sorted()
+ *                  ReferencedPipeline(stream) <-> ReferencedPipeline(map)  <->  ReferencedPipeline(filter)
+ *      2. intermediate operations
+ *          stateful operation vs stateless operations
+ *
+ *          list.stream().map().filter().collect
+ *          1. ReferencedPipeline(stream) <-> ReferencedPipeline(map)  <->  ReferencedPipeline(filter) <->  ReferencedPipeline(terminal operation)
+ *                  -------------------------------------------------------------------------------->>>>
+ *          2. Sink1(list iterator)   ->    Sink2(function)   ->  Sink3(predicate)    ->  Sink(Collectors)
+ *                  <<<<-------------------------------------------------------------------------------
+ *          3. start running first sink list iterator
+ *
+ *
+ *          Supplier<Iterator> itr = () -> list.iterator();
+ *          itr.get()
+ *
+ *   *   *   *   *   *   *   *   *   *   *   *   *   *
+ *   1. create project
+ *   2. share it on github
+ *      deadline : tomorrow 10am CDT
+ */
+
+/**
  *  DB
  *  1. query =>
  *      join
@@ -105,7 +292,6 @@ class IteratorExample {
  *      B+ tree vs bitmap index
  *      execution plan + hint
  *  4. m - m vs 1 - m vs 1 - 1
- *
  */
 class MyRuntimeException extends RuntimeException {
     public MyRuntimeException(String message) {
