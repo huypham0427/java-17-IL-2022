@@ -279,20 +279,6 @@ class Java8Test {
  *   2. share it on github
  *      deadline : tomorrow 10am CDT
  */
-
-/**
- *  DB
- *  1. query =>
- *      join
- *      group by
- *      rank() vs dense_rank()
- *  2. transaction
- *      why
- *  3. index
- *      B+ tree vs bitmap index
- *      execution plan + hint
- *  4. m - m vs 1 - m vs 1 - 1
- */
 class MyRuntimeException extends RuntimeException {
     public MyRuntimeException(String message) {
         super(message);
@@ -363,3 +349,89 @@ class HashMapTest {
         System.out.println(map.get(s2)); // ？
     }
 }
+
+
+/**
+ *  [key, 5]
+ *  int preVal = map.getOrDefault(key, 0); //T1 : 5,  T2: 5
+ *  map.put(key, preVal + cnt); //T1: put(key, 5 + 1),   T2: put(key, 5 + 2)
+ *  //5 + 1 + 2
+ *
+ *  lost update
+ *
+ *  name    age      version
+ *  'Tom',  3           2
+ * * * * * * * * * * * * * * * * * * *
+ *  DB
+ *  employees (emp_id, name, salary, dept_id)
+ *  departments (dept_id, name)
+ *  1. query =>
+ *      join:  inner join, cross join, outer join
+ *      group by
+ *           query1: count number of employee in each department, display department name and count?
+                    select d.name as dep_name, count(e.emp_id) as ct
+                    from departments d left join employee e on d.dept_id = e.dept_id
+                    group by d.dept_id, d.name
+ *      rank() vs dense_rank()
+ *           query2: nth highest salary from employee table
+ *                  select
+ *                  from employees e1
+ *                  where (n - 1) = (select count(distinct(e2.salary)) from employees e2 where e2.salary > e1.salary)
+ *
+ *                  select *
+ *                  from (select e1.*, dense_rank() over (order by salary desc) as rank
+ *                        from employees e1) t
+ *                  where t.rank = n
+ *  2. transaction
+ *      why
+ *      undo area
+ *
+ *         MVCC
+ *       ->   [1, "Jerry", txid, rowid,  rollback pointer] -> [1, "Tom", txid..]
+ *  3. index
+ *      B+ tree vs
+ *      bitmap index
+ *          id,  sex       rowid                rowid     female    male
+ *          1    male        xx                  xx         0         1
+ *          2    female      xx                  xx         1         0
+ *          3    female      xx                  xx         1         0
+ *      execution plan(explain plan) + hint
+ *          full table scan
+ *          index access path
+ *              index unique scan
+ *              index range scan
+ *              index full scan
+ *              index fast full scan
+ *          merge join
+ *          hash join
+ *          nested join
+ *          Leading
+ *          parallel
+ *  4. m - m vs 1 - m vs 1 - 1
+ *      stu  1 - m  class
+ *      stu(stu_id(pk))
+ *      class(class_id(pk), stu_id(fk))
+ *
+ *      stu  m - m class
+ *      stu(stu_id)
+ *      stu_class (id, stu_id, class_id)
+ *      class(class_id)
+ *
+ *
+ * Tomorrow :
+ *  design patterns
+ *  1. Singleton
+ *  2. Factory vs Builder
+ *  3. Composition
+ *  4. Bridge
+ *  5. Strategy
+ *  6. Prototype
+ *  7. Template
+ *  8. Adaptor
+ *  9. Decorator / Static Proxy
+ *  10. Dynamic Proxy
+ *  11. Observer
+ *  12. Facade
+ *
+ * 1. Download database (Mysql, Oracle, PostgreSql, (in memory)Derby / H2)
+ */
