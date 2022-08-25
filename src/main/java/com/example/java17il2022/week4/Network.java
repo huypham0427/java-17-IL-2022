@@ -52,7 +52,7 @@ package com.example.java17il2022.week4;
  *  }
  *  <key>value</key>
  *
- *  2. Http
+ *  2. Http(tcp)
  *      a. http method
  *          get => get data
  *          post => create data
