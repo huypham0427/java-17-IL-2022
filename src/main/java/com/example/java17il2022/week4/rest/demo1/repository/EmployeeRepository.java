@@ -1,6 +1,6 @@
-package com.example.java17il2022.week4.rest.demo.repository;
+package com.example.java17il2022.week4.rest.demo1.repository;
 
-import com.example.java17il2022.week4.rest.demo.domain.entity.Employee;
+import com.example.java17il2022.week4.rest.demo1.domain.entity.Employee;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collection;

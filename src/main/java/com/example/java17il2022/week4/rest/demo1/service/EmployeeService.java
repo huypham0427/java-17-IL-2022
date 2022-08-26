@@ -1,7 +1,7 @@
-package com.example.java17il2022.week4.rest.demo.service;
+package com.example.java17il2022.week4.rest.demo1.service;
 
-import com.example.java17il2022.week4.rest.demo.domain.dto.EmployeeResponseDTO;
-import com.example.java17il2022.week4.rest.demo.domain.entity.Employee;
+import com.example.java17il2022.week4.rest.demo1.domain.dto.EmployeeResponseDTO;
+import com.example.java17il2022.week4.rest.demo1.domain.entity.Employee;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;

@@ -1,8 +1,4 @@
-package com.example.java17il2022.week4.rest.demo.domain.entity;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import java.util.Date;
+package com.example.java17il2022.week4.rest.demo1.domain.entity;
 
 public class Employee {
     private String name;

@@ -1,12 +1,12 @@
-package com.example.java17il2022.week4.rest.demo.service.impl;
+package com.example.java17il2022.week4.rest.demo1.service.impl;
 
-import com.example.java17il2022.week4.aop.advice.Around;
-import com.example.java17il2022.week4.rest.demo.domain.dto.EmployeeResponseDTO;
-import com.example.java17il2022.week4.rest.demo.domain.entity.Employee;
-import com.example.java17il2022.week4.rest.demo.exception.ResourceNotFoundException;
-import com.example.java17il2022.week4.rest.demo.repository.EmployeeRepository;
-import com.example.java17il2022.week4.rest.demo.service.EmployeeService;
+import com.example.java17il2022.week4.rest.demo1.domain.dto.EmployeeResponseDTO;
+import com.example.java17il2022.week4.rest.demo1.domain.entity.Employee;
+import com.example.java17il2022.week4.rest.demo1.exception.ResourceNotFoundException;
+import com.example.java17il2022.week4.rest.demo1.repository.EmployeeRepository;
+import com.example.java17il2022.week4.rest.demo1.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;

@@ -1,7 +1,7 @@
-package com.example.java17il2022.week4.rest.demo.repository.impl;
+package com.example.java17il2022.week4.rest.demo1.repository.impl;
 
-import com.example.java17il2022.week4.rest.demo.domain.entity.Employee;
-import com.example.java17il2022.week4.rest.demo.repository.EmployeeRepository;
+import com.example.java17il2022.week4.rest.demo1.domain.entity.Employee;
+import com.example.java17il2022.week4.rest.demo1.repository.EmployeeRepository;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;

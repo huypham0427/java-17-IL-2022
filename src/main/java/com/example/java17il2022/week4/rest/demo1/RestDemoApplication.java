@@ -1,4 +1,4 @@
-package com.example.java17il2022.week4.rest.demo;
+package com.example.java17il2022.week4.rest.demo1;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

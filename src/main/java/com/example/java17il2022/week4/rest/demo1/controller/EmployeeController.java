@@ -1,15 +1,14 @@
-package com.example.java17il2022.week4.rest.demo.controller;
+package com.example.java17il2022.week4.rest.demo1.controller;
 
 
-import com.example.java17il2022.week4.rest.demo.domain.dto.EmployeeResponseDTO;
-import com.example.java17il2022.week4.rest.demo.domain.entity.Employee;
-import com.example.java17il2022.week4.rest.demo.exception.CommonErrorResponse;
-import com.example.java17il2022.week4.rest.demo.exception.ResourceNotFoundException;
-import com.example.java17il2022.week4.rest.demo.service.EmployeeService;
+import com.example.java17il2022.week4.rest.demo1.domain.dto.EmployeeResponseDTO;
+import com.example.java17il2022.week4.rest.demo1.domain.entity.Employee;
+import com.example.java17il2022.week4.rest.demo1.exception.CommonErrorResponse;
+import com.example.java17il2022.week4.rest.demo1.exception.ResourceNotFoundException;
+import com.example.java17il2022.week4.rest.demo1.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
@@ -24,7 +23,7 @@ public class EmployeeController {
         this.employeeService = employeeService;
     }
 
-    @GetMapping("/employees")
+    @GetMapping(value = "/employees")
     public ResponseEntity<Collection<EmployeeResponseDTO>> getAll() {
         return new ResponseEntity<>(employeeService.getAllEmp(), HttpStatus.OK);
     }
