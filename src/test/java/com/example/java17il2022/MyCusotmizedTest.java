@@ -1,7 +1,7 @@
 package com.example.java17il2022;
 
-import com.example.java17il2022.week6.Calculation;
-import com.example.java17il2022.week6.CalculationImpl;
+import com.example.java17il2022.week6.test.calculator.Calculation;
+import com.example.java17il2022.week6.test.calculator.CalculationImpl;
 import com.example.java17il2022.week6.SumStrategy;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

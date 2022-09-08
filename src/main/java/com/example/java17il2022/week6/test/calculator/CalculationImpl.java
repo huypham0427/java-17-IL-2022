@@ -1,6 +1,6 @@
-package com.example.java17il2022.week6;
+package com.example.java17il2022.week6.test.calculator;
 
-import java.util.Arrays;
+import com.example.java17il2022.week6.SumStrategy;
 
 public class CalculationImpl implements Calculation{
     private final SumStrategy sumHelper;
