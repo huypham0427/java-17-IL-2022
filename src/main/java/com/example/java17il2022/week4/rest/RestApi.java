@@ -24,8 +24,8 @@ package com.example.java17il2022.week4.rest;
  *              2xx success
  *                  200 OK
  *                  201 Created
- *                  204
- *              3xx
+ *                  204 No Content
+ *              3xx the request has more than one possible responses
  *              4xx bad request(client size error)
  *                  400 bad request
  *                  401 authentication fail
